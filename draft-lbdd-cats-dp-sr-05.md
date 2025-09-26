@@ -1,7 +1,7 @@
 ---
 title: Computing-Aware Traffic Steering (CATS) Using Segment Routing
 abbrev: Anycast-based CATS
-docname: draft-lbdd-cats-dp-sr-05
+docname: draft-lbdd-cats-dp-sr-06
 date:
 category: std
 submissionType: IETF
@@ -64,16 +64,13 @@ informative:
 
 --- abstract
 
-This document describes a solution that adheres to the Computing-Aware Traffic Steering (CATS) framework.
-The solution uses anycast IP addresses as the CATS service identifier 
-and Segment Routing (SR) as the data plane encapsulation to achieve computing-aware traffic
-steering among multiple services instances. 
+This document describes a solution that adheres to the Computing-Aware Traffic Steering (CATS) framework. The solution uses anycast IP addresses as the CATS service identifiers and Segment Routing (SR) as the data plane encapsulation to achieve computing-aware traffic steering among multiple services instances. 
 
 --- middle
 
 # Introduction
 
-As described in {{?I-D.ietf-cats-usecases-requirements}}, traffic steering that takes into account computing resource metrics would benefit several services, e.g., latency-sensitive service like immersive services that rely upon the use of augmented reality or virtual reality (AR/VR) techniques. 
+As described in {{?I-D.ietf-cats-usecases-requirements}}, traffic steering that takes into account computing resource metrics would benefit several services, e.g., the latency-sensitive service. A typical example would be the immersive services that rely upon the use of augmented reality or virtual reality (AR/VR) techniques.
 
 {{!I-D.ietf-cats-framework}} defines a framework for Computing-Aware Traffic Steering (CATS). Such a framework defines an approach for making compute- and network-aware traffic steering decisions in networking environments where services are deployed in many locations. 
 
@@ -86,11 +83,11 @@ This document proposes a data plane solution for the realization of CATS. The so
 
 This document makes use of the terms defined in {{!I-D.ietf-cats-framework}}. 
 
-Note: Terms such as CATS Instance Selector ID (CIS-ID) may be updated to echo what will be agreed in the CATS framework {{!I-D.ietf-cats-framework}}.
+Note: Terms such as CATS Service Contact Instance ID (CSCI-ID) have been updated in the CATS framework {{!I-D.ietf-cats-framework}}.
 
 # Solution Overview
 
-This section describes the details of realizing CATS identifiers, CATS components, and workflow.
+This section describes the details of realizing CATS identifiers, CATS components, and realted workflow.
 
 
 ## Realization of CATS Framework Components
@@ -101,7 +98,8 @@ A CATS Service ID (CS-ID) is an anycast IPv4 or IPv6 address. Such an IP address
 
 The CATS overlay encapsulation is established from an Ingress CATS-Router to an Egress CATS-Router connected to a service contact instance. The service contact instance is typically hosted in a service site. 
 
-Depending on the deployment requirements, CIS-IDs may be needed to indicate where to forward the packet to a specific interface pointing to a specific site in the case that multiple sites connect to the same Egress CATS-Router.
+As defined in the CATS framework, a CSCI-ID is the identifier of a specific service contact instance. Depending on the deployment requirements, a CSCI-ID may be needed to indicate where to forward the packet in the case that multiple sites connect to the same Egress CATS-Router. 
+
 
 ### CATS Components
 
@@ -109,42 +107,42 @@ In the context of this document, CATS-Routers are required to support SR encapsu
 
 The CATS Traffic Classifier (C-TC) is assumed to be running on Ingress CATS-Routers. 
 
-For each service site, one or multiple C-SMAs and C-NMAs can be implemented within the site to collect the metrics of the service instances.
+For each service site, one or multiple C-SMAs can be implemented within the site to collect the metrics of the service instances.
 
 
 ## Realization of the CATS Framework Workflow
 
 ### Service Announcement
 
-The service anycast IP address may announced using a rendezvous service (DNS, for example). Clients can obtain the CS-ID of the service from the rendezvous service used by the application (e.g., DNS). 
+The service's anycast IP address may be announced by using a rendezvous service (DNS, for example). Clients can obtain the CS-ID of the service from the rendezvous service used by the application. 
 It is out of scope of this document to provide a comprehensive list of all candidate rendezvous services.
 
 ### Metrics Distribution
 
-As per the CATS framework, CS-ID routes with metrics are distributed among the overlay CATS Routers. The detailed control plane solutions of metrics distribution are out of the scope of this document. However, a sample procedure is provided for the readers convenience.
+As per the CATS framework, CS-ID routes with metrics are distributed among the overlay CATS Routers. The detailed control plane solutions of metrics distribution are out of the scope of this document. However, a sample procedure is provided for the readers' convenience.
 
 For example, BGP can be used to distribute CS-ID routes with metrics.
 
-In the case of the C-SMA running as stand alone outside an Egress CATS-Router, the C-SMA collects the metrics
+In the case of the C-SMA running as a stand-alone entity outside an Egress CATS-Router, the C-SMA collects the metrics
 of computing resource within a service site and distributes the CS-ID routes with the collected metrics to
 the Egress CATS-Router. Egress CATS-Routers will generate the new metrics combined with network metrics and
-computing-related metrics, and redistribute the CS-ID route to Ingress CATS-Routers. In the case of the C-SMA
+computing-related metrics, and redistribute the CS-ID routes to Ingress CATS-Routers. In the case of the C-SMA
  running as a logic entity on an Egress CATS-Router, the same process will be performed inside the Egress CATS-Router.
 
-As described in {{Section 3.4 of !I-D.ietf-cats-framework}}, CATS can be deployed in a distributed model, centralized model,
-or a hybrid model. In a centralized model or hybrid model, the routes with metrics may be collected by centralized controllers.
+As described in {{Section 3.4 of !I-D.ietf-cats-framework}}, CATS can be deployed in a distributed model, a centralized model,
+or a hybrid model. In a centralized model or a hybrid model, the routes with metrics may be collected by centralized controllers.
 BGP-LS may be a candidate solution to collect the route with metrics from CATS-Routers to controllers; the use of BGP-LS is however out of the scope of this document.
 
-A centralized controller may also install the forwarding policy on Ingress CATS-Routers to steer the traffic; how these policies are communicated to the routers is out of the scope of this document. 
+A centralized controller may also install forwarding policies on Ingress CATS-Routers to steer the traffic; how these policies are communicated to the routers is out of the scope of this document. 
 
 
-### Service Demand Processing
+### Service Access Processing {#service-access}
 
 Two SR {{?RFC8402}} data plane approaches are supported: SRv6 {{RFC8986}} and SR-MPLS {{RFC8660}}. This section introduces a solution based upon SRv6 and SR-MPLS as data planes for CATS purposes.
 
 An Ingress CATS-Router generates SRv6/SR-MPLS encapsulations from itself to Egress CATS-Routers according to the SR policy received from a controller. An Ingress CATS-Router receives service routes with network and computing-related metrics from Egress CATS-Routers. An C-PS will select the best service site according to the received service routes and routing policies. Once the best service site is selected, the associated Egress CATS-Router can be determined and the appropriate SR encapsulation from an Ingress CATS-Router to the C-PS-computed Egress CATS-Router can be selected.
 
-When a service demand is received by an Ingress CATS-Router, it is classified by the C-TC component. When a matching classification entry is found for this demand, the Ingress CATS-Router encapsulates and forwards it to the C-PS selected Egress CATS-Router via the matching SR tunnel.
+When a service access packet is received by an Ingress CATS-Router, it is classified by the C-TC component. When a matching classification entry is found for this service access packet, the Ingress CATS-Router encapsulates and forwards it to the C-PS selected Egress CATS-Router via the matching SR tunnel.
 
 #### SRv6
 
@@ -211,8 +209,26 @@ As per {{?I-D.ietf-cats-framework}}, different services may have different notio
 a 'flow' and may thus identify a flow differently. Typically, a flow is identified by the 5-tuple
 transport coordinates (source and destination addresses, source and destination port numbers, and protocol). 
 
-> Note: This section will be updated to reflect the discussion in the WG about affinity.
+For a service that requires service instance affinity, the Ingress CATS-Router needs to forward all the packets in a flow to the same service instance. {{service-access}} describes the general procedure of how to steer the packets of a flow to the same SR tunnel. When the packet is the first packet in the flow, the flow characteristics might not be matched in the C-TC, and a forwarding entry will be created for this flow. When the flow characteristics can be matched in the C-TC, the packet will be forwarded to the same tunnel selected by the previous packet in the flow, so that  the service instance affinity can be guaranteed.
 
+## Operational and Manageability Considerations
+
+For the routes of the anycast IP address, there may be multiple candidate routes on the Ingress Router, which have different Egress routers as the next hop. According to related computing metrics and network metrics, each candidate route can be associated with a dynamic weight.  
+ 
+There may also be multiple SR policies between the Ingress router and the target Egress router. For a CATS service, it should have an intent for the selecting or mapping of an SR policy. For example, the intent or objective can be low-latency, which appears as the color in an SR policy tuple <Headend, Color, Endpoint> {{RFC9256}}.
+ 
+After a service contact instance or an Egress Router is selected for a CATS flow considering weights of candidate routes, the Ingress CATS-Router needs to associate the flow with a proper SR policy between the Ingress CATS-Router and the Egress CATS-Router.
+
+Some accounting requirements are listed below to record the amount of CATS traffic in the operation.
+
+- An Ingress router MUST be able to account the amount of the CATS traffic along the selected SR policy.
+- An Egress Router MUST be able to account the amount of the CATS traffic received from a selected SR policy.
+ 
+The weight of a route will be changed in operation, therefore, some weight changing requirements are listed below. It is assuming that multiple service instances in different service sites form a load balance group at the Ingress router for a CATS service.
+ 
+- Large weight SHOULD be configured to the route to the service site that can serve more clients.
+- When the service site is busy, for example, certain essential recourse is about to be exhausted, the related route for it on the Ingress Router should lower its weight, or even leave the load balance group temperately.
+- If the latency of a specific SR tunnel bearing the CATS traffic exceeds a threshold, its related route on the Ingress Router should lower its weight, or even leave the load balance group temperately.
 
 # Security Considerations
 
