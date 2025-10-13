@@ -22,7 +22,7 @@ author:
   email: c.l@huawei.com
   country: China
  -
-  ins: Z.peng
+  ins: Z.Du
   name: Zongpeng Du
   organization: China Mobile
   email: duzongpeng@chinamobile.com
@@ -33,7 +33,12 @@ author:
   organization: Independent
   email: je_drake@yahoo.com
   country: United States of America
-
+ -
+  ins: Y.Shang
+  name: Yuxiang Shang
+  organization: Tsinghua University
+  email: shang-yx24@mails.tsinghua.edu.cn
+  country: China
 
 
 contributor:
@@ -243,3 +248,4 @@ This document makes no requests for IANA action.
 #Acknowledgements
 
 Many thanks to Mohamed Boucadair for his valuable help on this document. 
+
