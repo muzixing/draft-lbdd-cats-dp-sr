@@ -220,7 +220,7 @@ For a service that requires service instance affinity, the Ingress CATS-Router n
 
 For the routes of the anycast IP address, there may be multiple candidate routes on the Ingress Router, which have different Egress routers as the next hop. According to related computing metrics and network metrics, each candidate route can be associated with a dynamic weight.  
  
-There may also be multiple SR policies between the Ingress router and the target Egress router. For a CATS service, it should have an intent for the selecting or mapping of an SR policy. For example, the intent or objective can be low-latency, which appears as the color in an SR policy tuple <Headend, Color, Endpoint> {{RFC9256}}.
+There may also be multiple SR policies between the Ingress router and the target Egress router. For a CATS service, it should have an intent for the selecting or mapping of an SR policy. For example, the intent or objective can be low-latency, which appears as the color in an SR policy tuple <Headend, Color, Endpoint> {{!RFC9256}}.
  
 After a service contact instance or an Egress Router is selected for a CATS flow considering weights of candidate routes, the Ingress CATS-Router needs to associate the flow with a proper SR policy between the Ingress CATS-Router and the Egress CATS-Router.
 
@@ -247,5 +247,4 @@ This document makes no requests for IANA action.
 
 #Acknowledgements
 
-Many thanks to Mohamed Boucadair for his valuable help on this document. 
-
+Many thanks to Mohamed Boucadair for his valuable help on this document.
